@@ -1,3 +1,6 @@
+"""
+    This is a Python3 code
+"""
 import time
 import board
 import neopixel

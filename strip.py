@@ -16,7 +16,6 @@ from os import system
 LED_COUNT      = 300      # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
 
-# LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
 LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
@@ -28,30 +27,6 @@ WAIT           = 10.0 / 10000.0
 def make_color(color):
     # the colors are swapped, because the led strip is GRB
     return Color(color[1], color[0], color[2])
-
-
-# Define functions which animate LEDs in various ways.
-def colorWipe(strip, color=[0, 0, 0], wait_ms=WAIT):
-    """Wipe color across display a pixel at a time."""
-    for i in range(strip.numPixels()):
-        strip.setPixelColor(i, make_color(color))
-        strip.show()
-        time.sleep(wait_ms)
-
-
-def color_wipe_reversed(strip, color=[0, 0, 0], wait_ms=WAIT):
-	for i in reversed(range(strip.numPixels())):
-		strip.setPixelColor(i, make_color(color))
-		strip.show()
-		time.sleep(wait_ms)
-
-
-def color_double(strip, color=[0, 0, 0], wait_ms=WAIT):
-	for i in range(strip.numPixels()/2+1):
-		strip.setPixelColor(i, make_color(color))
-		strip.setPixelColor(strip.numPixels()-i, make_color(color))
-		strip.show()
-		time.sleep(wait_ms)
 
 
 def pulse(strip, color, wait_ms=WAIT, iterations=3):

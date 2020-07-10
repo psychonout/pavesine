@@ -1,10 +1,12 @@
 """
-    This is a Python3 code
+    This is a Python3 code that does the lightshow for a led strip
 """
 import time
 import board
 import neopixel
 import json
+import os
+from bulb import set_color as set_bulb_color
 from random import randint, choice
 from pprint import pprint
 
@@ -116,21 +118,40 @@ def pulse(color, delay=0, iterations=3):
         pass
 
 
+def bulb_flow():
+    # adding this to separate process, but could probably do async
+    try:
+        py3 = "/usr/bin/python3"
+        script = os.path.join(os.getcwd(), "set_flow.py")
+        os.system(f"{py3} {script}")
+    except Exception:
+        pass
 
-if __name__ == "__main__":
+
+def run_pixels():
     with open("colors.json", "r") as f:
         colors = json.load(f)
     while True:
         for i, fn in enumerate([color_wipe, color_wipe, color_both_sides,
                                 color_both_sides, theater_chase]):
-            rand_color = choice(colors)
-            print(rand_color["name"])
+            color = choice(colors)
+            print(color["name"])
+            try:
+                set_bulb_color(color["rgb"])
+            except Exception:
+                pass
             if i % 2 == 0:
-                fn(rand_color["rgb"])
+                fn(color["rgb"])
                 fn()
             else:
-                fn(rand_color["rgb"], direction="bck")
+                fn(color["rgb"], direction="bck")
                 fn(direction="bck")
+        process = bulb_flow()
         for fn in [rainbow, rainbow_cycle, theater_chase_rainbow]:
             fn()
             clear_strip()
+        process.terminate()
+
+
+if __name__ == "__main__":
+    run_pixels()

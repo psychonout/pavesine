@@ -26,8 +26,8 @@ def lights_out():
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         if sys.argv[1] == "sunrise":
-            lights_in()
-        elif sys.argv[1] == "sunset":
             lights_out()
+        elif sys.argv[1] == "sunset":
+            lights_in()
     else:
         sys.exit("""This program accepts 'sunrise', 'sunset' arguments.""")

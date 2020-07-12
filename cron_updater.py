@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from crontab import CronTab
 
 
+PY_PATH = "usr/bin/python3"
 PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = f'{PATH}/config.json'
 
@@ -29,7 +30,7 @@ def create_cron():
         if 'update_cron' in item:
             break
     else:
-        command = f'cd {PATH} && python3 cron_updater.py'
+        command = f'cd {PATH} && {PY_PATH} cron_updater.py'
         job = cron.new(command=command)
         job.hour.on(0)
         job.minute.on(0)
@@ -89,16 +90,7 @@ def get_config(force_update=False):
     '''
     if force_update or not path.exists(CONFIG_PATH):
         create_cron()
-        data = update_config()
-    else:
-        try:
-            with open(CONFIG_PATH, 'r') as f:
-                data = json.load(f)
-            date_updated = datetime.strptime(data['last_update'], '%Y-%m-%d')
-            week_ago = datetime.now() - timedelta(days=7)
-        # this is here in case there are any faults in the config file
-        except Exception:
-            data = update_config()
+    data = update_config()
     return data['lat'], data['lon']
 
 
@@ -115,7 +107,7 @@ def update_cron(timestamps):
                 job = item
                 break
         else:  # if the job not found
-            command = f'cd {PATH} && venv/bin/python lights_switch.py {key}'
+            command = f'cd {PATH} && {PY_PATH} lights_switch.py {key}'
             job = cron.new(command=command)
         job.hour.on(hour)
         job.minute.on(minute)
@@ -123,7 +115,7 @@ def update_cron(timestamps):
         if job.is_valid():
             cron.write()
     for item in cron:
-        if 'update_cron' in item.command:
+        if 'cron_updater' in item.command:
             job = item
             job.set_comment(datetime.now().date().isoformat())
             cron.write()

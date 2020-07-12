@@ -1,6 +1,6 @@
 import time
 from bulb import set_color
-from random_pixel import wheel
+from random_pixels import wheel
 
 
 if __name__ == "__main__":
@@ -10,5 +10,5 @@ if __name__ == "__main__":
         for j in range(256):
             i = 0
             color = wheel((i+j) & 255)
-            bulb.set_rgb(color)
-            time.sleep(wait_ms/1000.0)
+            set_color(color)
+            # time.sleep(wait_ms/1000.0)

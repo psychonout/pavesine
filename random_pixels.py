@@ -11,11 +11,11 @@ from random import randint, choice
 from pprint import pprint
 
 pixels = 300
-blank = [0, 0, 0, 0]
+blank = [0, 0, 0]
 strip = neopixel.NeoPixel(board.D18,
 			   pixels,
 			   auto_write=False,
-			   pixel_order=neopixel.RGBW)
+			   pixel_order=neopixel.RGB)
 
 
 def generator(size, direction="fwd"):
@@ -53,7 +53,7 @@ def color_wipe(color=blank, delay=0, direction="fwd"):
     for i in generator(pixels, direction):
         strip[i] = color
         strip.show()
-        time.sleep(delay)
+       #  time.sleep(delay)
 
 
 def color_both_sides(color=blank, delay=0, direction="fwd"):
@@ -61,7 +61,7 @@ def color_both_sides(color=blank, delay=0, direction="fwd"):
         strip[i] = color
         strip[pixels-i-1] = color
         strip.show()
-        time.sleep(delay)
+        # time.sleep(delay)
 
 
 def theater_chase(color=blank, delay=0, iterations=10, direction="fwd"):
@@ -71,7 +71,7 @@ def theater_chase(color=blank, delay=0, iterations=10, direction="fwd"):
             for i in range(0, pixels, 3):
                 strip[i+q] = color
             strip.show()
-            time.sleep(delay*100)
+            time.sleep(delay/10)
             for i in range(0, pixels, 3):
                 strip[i+q] = blank
 
@@ -102,10 +102,10 @@ def theater_chase_rainbow(delay=0, iterations=10):
         for q in generator(3):
             for i in range(0, pixels, 3):
                 color = wheel((i+j) % 255)
-                strip[i+q] = _color
+                strip[i+q] = color
             strip.show()
             time.sleep(delay*100)
-            for i in range(0, pixels(), 3):
+            for i in range(0, pixels, 3):
                 strip[i+q] = blank
 
 
@@ -135,22 +135,28 @@ def run_pixels():
         for i, fn in enumerate([color_wipe, color_wipe, color_both_sides,
                                 color_both_sides, theater_chase]):
             color = choice(colors)
-            print(color["name"])
             try:
                 set_bulb_color(color["rgb"])
+                print(color["name"])
             except Exception:
                 pass
+            # strip interprets colors differently
+            color["rgb"] = [color["rgb"][1], color["rgb"][0], color["rgb"][2]]
             if i % 2 == 0:
-                fn(color["rgb"])
-                fn()
+                if i == 4:
+                    fn(color["rgb"], delay=1)
+                else:
+                    fn(color["rgb"])
+                    fn()
             else:
                 fn(color["rgb"], direction="bck")
                 fn(direction="bck")
-        process = bulb_flow()
+        color_both_sides(color["rgb"])
+        color_both_sides(direction="bck")        
+        # process = bulb_flow()
         for fn in [rainbow, rainbow_cycle, theater_chase_rainbow]:
             fn()
-            clear_strip()
-        process.terminate()
+        # process.terminate()
 
 
 if __name__ == "__main__":

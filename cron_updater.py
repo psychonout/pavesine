@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from crontab import CronTab
 
 
-PY_PATH = "usr/bin/python3"
+PY_PATH = "/usr/bin/python3"
 PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = f'{PATH}/config.json'
 

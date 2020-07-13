@@ -5,12 +5,17 @@ from tasmota import query
 from random_pixels import run_pixels, clear_strip
 
 
+tasmota_led_strip = "http://192.168.0.196"
+tasmota_power_source = "http://192.168.0.23"
+
+
 def lights_in():
     try:
         turn_on()
     except Exception:
         pass
-    query("http://192.168.0.196", "power on")
+    query(tasmota_led_strip, "power on")
+    query(tasmota_power_source, "power on")    
     run_pixels()
 
 
@@ -19,8 +24,9 @@ def lights_out():
         turn_off()
     except Exception:
         pass
-    query("http://192.168.0.196", "power off")
     clear_strip()
+    query(tasmota_led_strip, "power off")
+    query(tasmota_power_source, "power off")
 
 
 if __name__ == "__main__":

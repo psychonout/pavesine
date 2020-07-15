@@ -1,17 +1,17 @@
 import sys
 import subprocess
-from bulb import turn_on, turn_off
+import bulb
 from tasmota import query
 from random_pixels import run_pixels, clear_strip
 
 
 tasmota_led_strip = "http://192.168.0.196"
-tasmota_power_source = "http://192.168.0.23"
+tasmota_power_source = "http://192.168.0.37"
 
 
 def lights_in():
     try:
-        turn_on()
+        bulb.turn_on()
     except Exception:
         pass
     query(tasmota_led_strip, "power on")
@@ -21,7 +21,7 @@ def lights_in():
 
 def lights_out():
     try:
-        turn_off()
+        bulb.turn_off()
     except Exception:
         pass
     clear_strip()

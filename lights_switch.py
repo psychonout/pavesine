@@ -6,10 +6,20 @@ from random_pixels import run_pixels, clear_strip
 
 
 tasmota_led_strip = "http://192.168.0.196"
-tasmota_power_source = "http://192.168.0.37"
+tasmota_power_source = "http://192.168.0.23"
+
+def make_it(color):
+    lights_out()
+    try:
+        bulb.turn_on()
+    except Exception:
+        pass
+    query(tasmota_power_source, "power on")
+    run_pixels(color)
 
 
 def lights_in():
+    lights_out()
     try:
         bulb.turn_on()
     except Exception:

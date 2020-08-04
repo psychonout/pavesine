@@ -1,0 +1,11 @@
+#!/bin/bash
+
+/bin/sleep 5
+
+# Ensure the environment is available
+source /home/pi/.bashrc
+
+/usr/bin/tmux new-session -d -s lights_switch
+/usr/bin/tmux send-keys -t lights_switch "source /home/USERNAME/.bashrc" C-m
+/usr/bin/tmux send-keys -t lights_switch "echo \"hello world!\"" C-m
+/usr/bin/tmux send-keys -t lights_switch "cd /home/pi/Projects/pavesine && sudo /usr/bin/python3 lights_switch.py sunset" C-m

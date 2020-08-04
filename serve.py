@@ -1,7 +1,7 @@
 import os
 from flask import abort, request, Flask
 from waitress import serve
-from lights_switch import lights_in, lights_out
+from lights_switch import make_it, lights_in, lights_out
 from datetime import datetime
 # from working_dir.gsheets import add_eday_entry
 
@@ -39,6 +39,8 @@ def main():
                 lights_out()
             else:
                 print(f"{command} not found")
+        elif "color" in data:
+            make_it(data["color"])
         # elif "mirobo" in data:
             # status = data["mirobo"]
             # ip = "--ip 192.168.1.100"

@@ -64,6 +64,13 @@ def color_both_sides(color=blank, delay=0, direction="fwd"):
         # time.sleep(delay)
 
 
+def both_sides_two_colors(color1=blank, color2=blank, direction="fwd"):
+    for i in generator(int(pixels/2), direction):
+        strip[i] = color1
+        strip[pixels-i-1] = color2
+        strip.show()
+
+
 def theater_chase(color=blank, delay=0, iterations=10, direction="fwd"):
     """Movie theater light style chaser animation."""
     for j in generator(iterations):
@@ -128,36 +135,53 @@ def bulb_flow():
         pass
 
 
-def run_pixels():
+def run_pixels(shade=None):
     with open("colors.json", "r") as f:
         colors = json.load(f)
     while True:
-        for i, fn in enumerate([color_wipe, color_wipe, color_both_sides,
-                                color_both_sides, theater_chase]):
+        # how many times functions repeat in different settings
+        times = 2
+        funk = [color_wipe] * times
+        funk.extend([color_both_sides] * times)
+        funk.extend([theater_chase] * times * times)
+        for i, fn in enumerate(funk):
             color = choice(colors)
+            print(color["name"])
+            if shade:
+                while shade not in color["name"].lower():
+                    color = choice(colors)
+            color = color["rgb"]
             try:
-                set_bulb_color(color["rgb"])
-                print(color["name"])
+                set_bulb_color(color)
             except Exception:
                 pass
-            # strip interprets colors differently
-            color["rgb"] = [color["rgb"][1], color["rgb"][0], color["rgb"][2]]
-            if i % 2 == 0:
-                if i == 4:
-                    fn(color["rgb"], delay=1)
-                else:
-                    fn(color["rgb"])
-                    fn()
-            else:
-                fn(color["rgb"], direction="bck")
+            # strip interprets colors differently, r and g switched
+            color = [color[1], color[0], color[2]]
+            if i >= times * 2:
+                fn(color, delay=randint(1, 5))
+            elif i % times == 0:
+                fn(color)
+                fn()
+            elif i+1 % times == 0:
+                fn(color, direction="bck")
                 fn(direction="bck")
-        color_both_sides(color["rgb"])
-        color_both_sides(direction="bck")        
-        # process = bulb_flow()
-        for fn in [rainbow, rainbow_cycle, theater_chase_rainbow]:
-            fn()
-        # process.terminate()
+            # these two below dont work correctly
+            elif i+2 % times == 0:
+                fn(color)
+                fn(direction="bck")
+            else:
+                fn(color, direction="bck")
+                fn()
+        if not shade:
+            # process = bulb_flow()
+            for fn in [rainbow, rainbow_cycle, theater_chase_rainbow]:
+                fn()
+            # process.terminate()
 
 
 if __name__ == "__main__":
-    run_pixels()
+    while True:
+        both_sides_two_colors([0, 255, 0], [0, 0, 255], "fwd")
+        both_sides_two_colors([0, 0, 255], [0, 255, 0], "bck")
+    #    both_sides_two_colors()
+    # run_pixels()

@@ -5,8 +5,8 @@ from tasmota import query
 from random_pixels import run_pixels, clear_strip
 
 
-tasmota_led_strip = "http://192.168.0.196"
-tasmota_power_source = "http://192.168.0.23"
+tasmota_led_strip = "http://192.168.0.166"
+tasmota_power_source = "http://192.168.0.127"
 
 def make_it(color):
     lights_out()

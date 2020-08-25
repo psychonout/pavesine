@@ -6,16 +6,20 @@ import board
 import neopixel
 import json
 import os
-from bulb import set_color as set_bulb_color
+#from bulb import set_color as set_bulb_color
 from random import randint, choice
 from pprint import pprint
 
-pixels = 300
-blank = [0, 0, 0]
-strip = neopixel.NeoPixel(board.D18,
-			   pixels,
-			   auto_write=False,
-			   pixel_order=neopixel.RGB)
+try:
+    pixels = 900
+    blank = [0, 0, 0]
+    strip = neopixel.NeoPixel(board.D18,
+    			   pixels,
+    			   auto_write=False,
+    			   pixel_order=neopixel.RGB)
+    print("Strip initialized!")
+except Exception as e:
+    print(e)
 
 
 def generator(size, direction="fwd"):
@@ -29,7 +33,6 @@ def generator(size, direction="fwd"):
             number
             for number in reversed(range(size))
         )
-
 
 def wheel(pos):
     """Generate rainbow colors across 0-255 positions."""
@@ -176,12 +179,14 @@ def run_pixels(shade=None):
             # process = bulb_flow()
             for fn in [rainbow, rainbow_cycle, theater_chase_rainbow]:
                 fn()
-            # process.terminate()
-
+            color1 = choice(colors)["rgb"]
+            color2 = choice(colors)["rgb"]
+            both_sides_two_colors(color1, color2, "fwd")
+            both_sides_two_colors([0, 0, 255], [0, 255, 0], "bck")
 
 if __name__ == "__main__":
     while True:
         both_sides_two_colors([0, 255, 0], [0, 0, 255], "fwd")
         both_sides_two_colors([0, 0, 255], [0, 255, 0], "bck")
-    #    both_sides_two_colors()
-    # run_pixels()
+        both_sides_two_colors()
+        run_pixels()

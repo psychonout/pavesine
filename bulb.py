@@ -1,7 +1,7 @@
 from miio import Yeelight
 
 
-ip = '192.168.0.55'
+ip = '192.168.0.235'
 token = '036f6ef3fb6f08c8aace35ade458c05d'
 itam = Yeelight(ip, token)
 
